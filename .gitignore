@@ -1,0 +1,8 @@
+build/
+
+# Ignore Mac OS X junk
+.DS_Store
+
+# Ignore various backup files
+*.bak
+*~
