@@ -95,8 +95,8 @@ Settings::Settings()
 	this->fullscreen		= 1;		// start in window
 	this->borderless		= false;
 	this->vsync				= true;
-	this->xres				= 480;		// default window width
-	this->yres				= 272;		// default window height
+	this->xres				= 340;		// default window width
+	this->yres				= 200;		// default window height
 	this->scale				= 1;		// default window scale
 	this->linear_filter		= false;    // don't "anti-alias"	
 	this->hires				= 0;	

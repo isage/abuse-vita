@@ -112,8 +112,9 @@ target_link_libraries(abuse sdlport)
 target_link_libraries(abuse imlib)
 target_link_libraries(abuse net)
 target_link_libraries(abuse ${SDL2_MIXER_LIBRARIES})
-target_link_libraries(abuse SDL2::SDL2-static)
-target_link_libraries(abuse z FLAC vorbisfile vorbis ogg mikmod mpg123)
+target_link_libraries(abuse SDL2::SDL2)
+target_link_libraries(abuse z FLAC vorbisfile vorbis ogg mikmod mpg123 modplug)
+target_link_libraries(abuse -Wl,--whole-archive pthread -Wl,--no-whole-archive)
 
 include_directories(
     ${abuse_SOURCE_DIR}/src
