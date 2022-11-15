@@ -330,14 +330,14 @@ void EventHandler::SysEvent(Event &ev)
 		switch (sdlev.cbutton.button)
 		{
 			//AR convert to key events
-		case SDL_CONTROLLER_BUTTON_A:
+//		case SDL_CONTROLLER_BUTTON_A:
 		case SDL_CONTROLLER_BUTTON_START:	ev.key = JK_ENTER;	break;//enter
 		case SDL_CONTROLLER_BUTTON_GUIDE:	ev.key = JK_F1;		break;//help
-		case SDL_CONTROLLER_BUTTON_B:
+//		case SDL_CONTROLLER_BUTTON_B:
 		case SDL_CONTROLLER_BUTTON_BACK:	ev.key = JK_ESC;	break;//go back
 			//
-//		case SDL_CONTROLLER_BUTTON_A:	ev.key = get_key_binding(get_ctr_binding("ctr_a").c_str(),0);	break;
-//		case SDL_CONTROLLER_BUTTON_B:	ev.key = get_key_binding(get_ctr_binding("ctr_b").c_str(),0);	break;
+		case SDL_CONTROLLER_BUTTON_A:	ev.key = get_key_binding(get_ctr_binding("ctr_a").c_str(),0);	break;
+		case SDL_CONTROLLER_BUTTON_B:	ev.key = get_key_binding(get_ctr_binding("ctr_b").c_str(),0);	break;
 		case SDL_CONTROLLER_BUTTON_X:	ev.key = get_key_binding(get_ctr_binding("ctr_x").c_str(),0);	break;
 		case SDL_CONTROLLER_BUTTON_Y:	ev.key = get_key_binding(get_ctr_binding("ctr_y").c_str(),0);	break;
 			//
@@ -346,10 +346,10 @@ void EventHandler::SysEvent(Event &ev)
 		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:	ev.key = get_key_binding(get_ctr_binding("ctr_lsh").c_str(),0);	break;
 		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:	ev.key = get_key_binding(get_ctr_binding("ctr_rsh").c_str(),0);	break;
 			//
-		case SDL_CONTROLLER_BUTTON_DPAD_UP:		use_left_stick = false;ev.key = get_key_binding("up",0);	break;
-		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:	use_left_stick = false;ev.key = get_key_binding("down",0);	break;
-		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:	use_left_stick = false;ev.key = get_key_binding("left",0);	break;
-		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:	use_left_stick = false;ev.key = get_key_binding("right",0);	break;
+		case SDL_CONTROLLER_BUTTON_DPAD_UP:		use_left_stick = false;ev.key = get_key_binding(get_ctr_binding("ctr_dpad_up").c_str(),0);	break;
+		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:	use_left_stick = false;ev.key = get_key_binding(get_ctr_binding("ctr_dpad_down").c_str(),0);	break;
+		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:	use_left_stick = false;ev.key = get_key_binding(get_ctr_binding("ctr_dpad_left").c_str(),0);	break;
+		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:	use_left_stick = false;ev.key = get_key_binding(get_ctr_binding("ctr_dpad_right").c_str(),0);	break;
 			//
 		default:
 			// Still want to process this as a key press if only to allow the

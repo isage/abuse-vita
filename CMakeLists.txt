@@ -7,6 +7,7 @@ IF(DEFINED ENV{VITASDK})
    set(VITA_TITLEID  "ABUS00001")
    set(VITA_VERSION  "01.00")
    set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
+   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
 ELSE()
    message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
 ENDIF()
@@ -16,7 +17,7 @@ set(abuse_VERSION 0.9)
 set(abuse_VERSION_MAJOR 0)
 set(abuse_VERSION_MINOR 9)
 set(abuse_VERSION_PATCH 0)
-set(abuse_VERSION_TWEAK 0)
+set(abuse_VERSION_TWEAK 1)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 find_package(SDL2 2.0.0 REQUIRED)
@@ -36,8 +37,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
 
 set(ASSETDIR "app0:/data/")
 
-add_definitions(-DASSETDIR="app0:/data/")
+add_definitions("-marm -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -ftree-vectorize -ffast-math -fsigned-char -fno-optimize-sibling-calls")
 
+add_definitions(-DASSETDIR="app0:/data/")
 add_definitions(-DPACKAGE_NAME="abuse")
 add_definitions(-DPACKAGE_VERSION="${abuse_VERSION}")
 add_definitions(-DHAVE_CONFIG_H)

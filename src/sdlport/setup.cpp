@@ -40,6 +40,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "ini.h"
+
 #include <psp2/io/fcntl.h>
 
 extern Settings settings;
@@ -165,27 +167,107 @@ Settings::Settings()
 	//
 	this->ctr_ltg = "bt";
 	this->ctr_rtg = "b2";
+
+	this->ctr_dpad_up = "up";
+	this->ctr_dpad_down = "down";
+	this->ctr_dpad_left = "left";
+	this->ctr_dpad_right = "right";
 	//
 	this->ctr_f5 = SDL_CONTROLLER_BUTTON_LEFTSTICK;
 	this->ctr_f9 = SDL_CONTROLLER_BUTTON_RIGHTSTICK;
+}
+
+std::string ActionToButton(std::string& action)
+{
+	std::string control = action;
+	if      (action == "b1")	control = "special";
+	else if (action == "b2")	control = "fire";
+	else if (action == "b3")	control = "weapon_prev";
+	else if (action == "b4")	control = "weapon_next";
+	else if (action == "bt")	control = "special2";
+    return control;
 }
 
 //////////
 ////////// CREATE DEFAULT "config.txt" FILE
 //////////
 
-bool Settings::CreateConfigFile(std::string file_path)
+bool Settings::CreateConfigFile()
 {
-    return true;
+    char config_path[256];
+    char* pref_path = SDL_GetPrefPath(NULL,"abuse");
+    if (pref_path != NULL)
+    {
+        snprintf(config_path, 255, "%s/bindings.ini", pref_path);
+        SDL_free(pref_path);
+        mINI::INIFile file(config_path);
+        mINI::INIStructure ini;
+
+        ini["controller"]["cross"]    = ActionToButton(this->ctr_a);
+        ini["controller"]["circle"]   = ActionToButton(this->ctr_b);
+        ini["controller"]["square"]   = ActionToButton(this->ctr_x);
+        ini["controller"]["triangle"] = ActionToButton(this->ctr_y);
+
+        ini["controller"]["l3"] = ActionToButton(this->ctr_lst);
+        ini["controller"]["r3"] = ActionToButton(this->ctr_rst);
+        //
+        ini["controller"]["l1"] = ActionToButton(this->ctr_lsr);
+        ini["controller"]["r1"] = ActionToButton(this->ctr_rsr);
+        //
+        ini["controller"]["l2"] = ActionToButton(this->ctr_ltg);
+        ini["controller"]["r2"] = ActionToButton(this->ctr_rtg);
+
+        ini["controller"]["dpad_up"]    = ActionToButton(this->ctr_dpad_up);
+        ini["controller"]["dpad_down"]  = ActionToButton(this->ctr_dpad_down);
+        ini["controller"]["dpad_left"]  = ActionToButton(this->ctr_dpad_left);
+        ini["controller"]["dpad_right"] = ActionToButton(this->ctr_dpad_right);
+
+        return file.generate(ini);
+    }
+    return false;
 }
+
+
 
 //////////
 ////////// READ CONFIG FILE
 //////////
 
-bool Settings::ReadConfigFile(std::string folder)
+bool Settings::ReadConfigFile()
 {
-    return true;
+    char config_path[256];
+    char* pref_path = SDL_GetPrefPath(NULL,"abuse");
+    if (pref_path != NULL)
+    {
+        snprintf(config_path, 255, "%s/bindings.ini", pref_path);
+        SDL_free(pref_path);
+        mINI::INIFile file(config_path);
+        mINI::INIStructure ini;
+        if (file.read(ini))
+        {
+            this->ControllerButton(ini["controller"]["cross"], "ctr_a");
+            this->ControllerButton(ini["controller"]["circle"], "ctr_b");
+            this->ControllerButton(ini["controller"]["square"], "ctr_x");
+            this->ControllerButton(ini["controller"]["triangle"], "ctr_y");
+
+            this->ControllerButton(ini["controller"]["l3"], "ctr_left_stick");
+            this->ControllerButton(ini["controller"]["r3"], "ctr_right_stick");
+            //
+            this->ControllerButton(ini["controller"]["l1"], "ctr_left_shoulder");
+            this->ControllerButton(ini["controller"]["r1"], "ctr_right_shoulder");
+            //
+            this->ControllerButton(ini["controller"]["l2"], "ctr_left_trigger");
+            this->ControllerButton(ini["controller"]["r2"], "ctr_right_trigger");
+
+            //
+            this->ControllerButton(ini["controller"]["dpad_up"], "ctr_dpad_up");
+            this->ControllerButton(ini["controller"]["dpad_down"], "ctr_dpad_down");
+            this->ControllerButton(ini["controller"]["dpad_left"], "ctr_dpad_left");
+            this->ControllerButton(ini["controller"]["dpad_right"], "ctr_dpad_right");
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Settings::ControllerButton(std::string c, std::string b)
@@ -211,6 +293,12 @@ bool Settings::ControllerButton(std::string c, std::string b)
 	//
 	if(b=="ctr_left_trigger")	{this->ctr_ltg = control;return true;};
 	if(b=="ctr_right_trigger")	{this->ctr_rtg = control;return true;};
+
+	//
+	if(b=="ctr_dpad_up")	{this->ctr_dpad_up = control;return true;};
+	if(b=="ctr_dpad_down")	{this->ctr_dpad_down = control;return true;};
+	if(b=="ctr_dpad_left")	{this->ctr_dpad_left = control;return true;};
+	if(b=="ctr_dpad_right")	{this->ctr_dpad_right = control;return true;};
 
 	return false;
 }
@@ -277,12 +365,20 @@ void setup( int argc, char **argv )
     atexit( SDL_Quit );
 
     char* save_path = SDL_GetPrefPath(NULL,"abuse");
-    set_save_filename_prefix( save_path );
+    if (save_path)
+    {
+        set_save_filename_prefix( save_path );
+        SDL_free(save_path);
+    }
 
     set_filename_prefix( "app0:/data/" );
 
 	//handle command-line parameters
     parseCommandLine(argc,argv);
+    if (!settings.ReadConfigFile())
+    {
+        settings.CreateConfigFile();
+    }
 
 	printf("Setting save dir to %s\n", get_save_filename_prefix());
 
@@ -333,6 +429,12 @@ std::string get_ctr_binding(std::string c)
 	//
 	else if(c=="ctr_ltg")	return settings.ctr_ltg;
 	else if(c=="ctr_rtg")	return settings.ctr_rtg;
+
+	//
+	else if(c=="ctr_dpad_up")	return settings.ctr_dpad_up;
+	else if(c=="ctr_dpad_down")	return settings.ctr_dpad_down;
+	else if(c=="ctr_dpad_left")	return settings.ctr_dpad_left;
+	else if(c=="ctr_dpad_right")	return settings.ctr_dpad_right;
 	
 	return "";
 }

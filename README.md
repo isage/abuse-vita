@@ -1,5 +1,15 @@
-## CDC Abuse PSVIta port
+## Cat's CDC Abuse PSVIta port
 
-# Note
+# Bindings
 
-For music to work, download https://www.libsdl.org/projects/SDL_mixer/timidity/timidity.tar.gz and copy contents to `ux0:/data/` on vita, so that you have `ux0:/data/timidity/` directory.
+Key bindings are stored in `ux0:/data/abuse/bindings.ini`, possible values are:
+
+* up
+* down
+* left
+* right
+* special
+* fire
+* weapon_next
+* weapon_prev
+* special2

@@ -73,6 +73,8 @@
 #define SHIFT_RIGHT_DEFAULT 0
 #define SHIFT_DOWN_DEFAULT 30
 
+int _newlib_heap_size_user   = 100 * 1024 * 1024;
+
 extern CrcManager *net_crcs;
 
 Game *the_game    = NULL;
@@ -2324,7 +2326,7 @@ void show_startup()
   // dprintf("Abuse version %s\n", PACKAGE_VERSION);
 
   // AR
-  printf("Abuse version %s\n", "0.9b");
+  printf("Abuse version %s\n", "0.9c");
 }
 
 char *get_line(int open_braces)

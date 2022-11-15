@@ -77,15 +77,16 @@ public:
 	std::string ctr_lst, ctr_rst;					//stick buttons
 	std::string ctr_lsr, ctr_rsr;					//shoulder buttons
 	std::string ctr_ltg, ctr_rtg;					//trigger buttons
+	std::string ctr_dpad_up, ctr_dpad_down, ctr_dpad_left, ctr_dpad_right;	//dpad
 
 	int ctr_f5, ctr_f9;
 
 	Settings();
 
-	bool CreateConfigFile	(std::string file_path);
+	bool CreateConfigFile	();
 	
 	bool ControllerButton	(std::string c, std::string b);
-	bool ReadConfigFile		(std::string folder);
+	bool ReadConfigFile		();
 
 };
 
